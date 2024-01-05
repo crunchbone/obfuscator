@@ -1,30 +1,30 @@
 local replacements = {
-    a = '▀ ',
-    b = '░ ',
-    c = '▒ ',
-    d = '▓ ',
-    e = '■ ',
-    f = '□ ',
-    g = '▪ ',
-    h = '▐ ',
-    i = '꜡ ',
-    j = ' ▫ ',
-    k = '▬ ',
-    l = '▲ ',
-    m = '► ',
-    n = '¶ ',
-    o = '▼ ',
-    p = '◄ ',
-    q = '╙ ',
-    r = '◊ ',
-    s = '֎ ',
-    t = '○ ',
-    u = '● ',
-    v = '♫ ',
-    w = '▄ ',
-    x = '♯ ',
-    y = '◘ ',
-    x = '◙ ',
+	a = '▀ ',
+	b = '░ ',
+	c = '▒ ',
+	d = '▓ ',
+	e = '■ ',
+	f = '□ ',
+	g = '▪ ',
+	h = '▐ ',
+	i = '꜡ ',
+	j = ' ▫ ',
+	k = '▬ ',
+	l = '▲ ',
+	m = '► ',
+	n = '¶ ',
+	o = '▼ ',
+	p = '◄ ',
+	q = '╙ ',
+	r = '◊ ',
+	s = '֎ ',
+	t = '○ ',
+	u = '● ',
+	v = '♫ ',
+	w = '▄ ',
+	x = '♯ ',
+	y = '◘ ',
+	z = '◙ ',
 	exclaim = '⅓ ',
 	paren = '⅔ ',
 	cparen = '⅛ ',
@@ -35,66 +35,37 @@ local replacements = {
 }
 local code = 'print("Hello World!")'
 
+local function obfuscate(str, isReverse)
+	if type(str) ~= 'string' then
+		error('First argument must be a string')
+	end
 
-local function Obfusticate(str)
-    if type(str) ~= 'string' then print('first argument must be a string') return end
-    local obfusticatedCode = str
-    for init, img in pairs(replacements) do
-        if string.len(tostring(init)) == 1 then
-            obfusticatedCode = string.gsub(obfusticatedCode,tostring(init),img)
-		else
-			if tostring(init) == 'exclaim' then
-				obfusticatedCode = string.gsub(obfusticatedCode,'!',img)
-			elseif tostring(init) == 'paren' then
-				obfusticatedCode = string.gsub(obfusticatedCode,'%(',img)
-			elseif tostring(init) == 'cparen' then
-				obfusticatedCode = string.gsub(obfusticatedCode,'%)',img)
-			elseif tostring(init) == 'brack' then
-				obfusticatedCode = string.gsub(obfusticatedCode,'%{',img)
-			elseif tostring(init) == 'cbrack' then
-				obfusticatedCode = string.gsub(obfusticatedCode,'%}',img)
-			elseif tostring(init) == 'dqou' then
-				obfusticatedCode = string.gsub(obfusticatedCode,'"',img)
-			elseif tostring(init) == 'qou' then
-				obfusticatedCode = string.gsub(obfusticatedCode,"'",img)
-			end
-        end
-    end
-    return obfusticatedCode
+	local transformedCode = str:gsub('.', function(char)
+		local replacement = replacements[char] or char
+		return isReverse and char or replacement
+	end)
+
+	return transformedCode
 end
 
-local function unObfusticate(str)
-    if type(str) ~= 'string' then print('first argument must be a string') return end
-    local obfusticatedCode = str
-    for init, img in pairs(replacements) do
-        if string.len(tostring(init)) == 1 then
-            obfusticatedCode = string.gsub(obfusticatedCode,img,tostring(init))   
+local function unobfuscate(str)
+	if type(str) ~= 'string' then
+		error('First argument must be a string')
+	end
+
+	local unobfuscatedCode = str
+	for char, replacement in pairs(replacements) do
+		if string.len(char) == 1 then
+			unobfuscatedCode = string.gsub(unobfuscatedCode, replacement, char)
 		else
-			if tostring(init) == 'exclaim' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,'!')
-			elseif tostring(init) == 'paren' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,'%%(')
-				obfusticatedCode = string.gsub(obfusticatedCode,'%%','')
-			elseif tostring(init) == 'cparen' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,'%%)')
-				obfusticatedCode = string.gsub(obfusticatedCode,'%%','')
-			elseif tostring(init) == 'brack' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,'%%{')
-				obfusticatedCode = string.gsub(obfusticatedCode,'%%','')
-			elseif tostring(init) == 'cbrack' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,'%%}')
-				obfusticatedCode = string.gsub(obfusticatedCode,'%%','')
-			elseif tostring(init) == 'dqou' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,'"')
-			elseif tostring(init) == 'qou' then
-				obfusticatedCode = string.gsub(obfusticatedCode,img,"'")
-			end
-        end
-    end
-    return obfusticatedCode
+			unobfuscatedCode = string.gsub(unobfuscatedCode, replacement, char)
+		end
+	end
+	return unobfuscatedCode
 end
 
-local cod = Obfusticate(code)
-print(cod)
-local unCod = unObfusticate(cod)
-print(unCod)
+local obfuscatedCode = obfuscate(code)
+print(obfuscatedCode)
+
+local unObfuscatedCode = unobfuscate(code)
+print(unObfuscatedCode)
